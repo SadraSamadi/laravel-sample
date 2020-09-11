@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+
+  app:
+    build: .
+    image: blog-app
+    container_name: blog-app
+    volumes:
+      - .:/blog
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: blog-db
+      DB_PORT: 3306
+      DB_DATABASE: blog
+      DB_USERNAME: root
+      DB_PASSWORD: secret
+
+  webserver:
+    image: nginx:alpine
+    container_name: blog-webserver
+    ports:
+      - 8080:80
+    volumes:
+      - .:/blog
+      - ./nginx/conf.d/:/etc/nginx/conf.d/
+
+  db:
+    image: mysql
+    container_name: blog-db
+    environment:
+      MYSQL_DATABASE: blog
+      MYSQL_ROOT_PASSWORD: secret
